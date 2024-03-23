@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +46,32 @@ public class BancoController {
                 .body(bancoRepository.findById(id));
     }
 
+    //Para atualizar dados do banco:
+    @PutMapping("/{id}")
+    public ResponseEntity<Banco> atualizarDadosDoBanco(@PathVariable("id") Long id,
+    @RequestBody Banco banco) {
+        Optional<Banco> bancOptional = bancoRepository.findById(id);
+
+        if (bancOptional.isPresent()) {
+            Banco bancoAtualizado = bancOptional.get();
+
+            bancoAtualizado.setAgencia(banco.getAgencia());
+            bancoAtualizado.getEnderecoBanco().setCep(banco.getEnderecoBanco().getCep());
+            bancoAtualizado.getEnderecoBanco().setLogradouro(banco.getEnderecoBanco().getLogradouro());
+            bancoAtualizado.getEnderecoBanco().setBairro(banco.getEnderecoBanco().getBairro());
+            bancoAtualizado.getEnderecoBanco().setCidade(banco.getEnderecoBanco().getCidade());
+            bancoAtualizado.getEnderecoBanco().setUf(banco.getEnderecoBanco().getUf());
+            bancoAtualizado.getEnderecoBanco().setDdd(banco.getEnderecoBanco().getDdd());
+            bancoAtualizado.getEnderecoBanco().setTelefone(banco.getEnderecoBanco().getTelefone());
+            bancoAtualizado.getEnderecoBanco().setCelular(banco.getEnderecoBanco().getCelular());
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .body(bancoRepository.save(bancoAtualizado));
+            
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     
