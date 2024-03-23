@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,6 +62,40 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();      
         
     }
+
+     //Para atualizar funcionário:
+    @PutMapping("/{idFuncionario}")
+    public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable("idFuncionario") Long idFuncionario, @RequestBody Funcionario funcionario) {
+        Optional<Funcionario> funcionarOptional = funcionarioRepository.findById(idFuncionario);
+
+        if (funcionarOptional.isPresent()) {
+            Funcionario funcionarioAtual = funcionarOptional.get();
+
+            funcionarioAtual.getPessoaFuncionario().setNome(funcionario.getPessoaFuncionario().getNome());
+            funcionarioAtual.getPessoaFuncionario().setSobrenome(funcionario.getPessoaFuncionario().getSobrenome());
+            funcionarioAtual.getPessoaFuncionario().setDataDeNascimento(funcionario.getPessoaFuncionario().getDataDeNascimento());
+            funcionarioAtual.getPessoaFuncionario().setCpf(funcionario.getPessoaFuncionario().getCpf());
+            funcionarioAtual.getPessoaFuncionario().setRg(funcionario.getPessoaFuncionario().getRg());
+            funcionarioAtual.getPessoaFuncionario().setEmail(funcionario.getPessoaFuncionario().getEmail());
+            funcionarioAtual.getEnderecoFuncionario().setCep(funcionario.getEnderecoFuncionario().getCep());
+            funcionarioAtual.getEnderecoFuncionario().setLogradouro(funcionario.getEnderecoFuncionario().getLogradouro());
+            funcionarioAtual.getEnderecoFuncionario().setBairro(funcionario.getEnderecoFuncionario().getBairro());
+            funcionarioAtual.getEnderecoFuncionario().setCidade(funcionario.getEnderecoFuncionario().getCidade());
+            funcionarioAtual.getEnderecoFuncionario().setUf(funcionario.getEnderecoFuncionario().getUf());
+            funcionarioAtual.getEnderecoFuncionario().setDdd(funcionario.getEnderecoFuncionario().getDdd());
+            funcionarioAtual.getEnderecoFuncionario().setTelefone(funcionario.getEnderecoFuncionario().getTelefone());
+            funcionarioAtual.getEnderecoFuncionario().setCelular(funcionario.getEnderecoFuncionario().getCelular());
+            funcionarioAtual.setSetor(funcionario.getSetor());
+            funcionarioAtual.setFuncao(funcionario.getFuncao());
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .body(funcionarioRepository.save(funcionarioAtual));
+            
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
 
     
 }
