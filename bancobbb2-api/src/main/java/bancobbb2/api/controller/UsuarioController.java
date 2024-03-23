@@ -49,6 +49,20 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("cpf/{cpf}")
+    public ResponseEntity<Usuario> buscarUsuarioPeloCpf(@PathVariable("cpf") String cpf) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByPessoaUsuarioCpf(cpf);
+        
+        if (usuarioOptional.isPresent()) {
+            Usuario usuarioEncontrado = usuarioOptional.get();
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .body(usuarioEncontrado);
+        } else {
+            return null;
+        }
+    }
+
 
 
 
