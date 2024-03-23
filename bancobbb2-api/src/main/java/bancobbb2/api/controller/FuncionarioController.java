@@ -44,6 +44,23 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.OK)
         .body(funcionarioRepository.findById(idFuncionario));
     }
-    
+
+    //Para acessar funcionário pelo cpf
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<Funcionario> buscarFuncionarioPeloCpf(@PathVariable("cpf") String cpf) {
+        Optional<Funcionario> funcionarioOptional = funcionarioRepository.findByPessoaCpf(cpf);
+        
+        if (funcionarioOptional.isPresent()) {
+
+            Funcionario funcionario = funcionarioOptional.get();
+
+            return ResponseEntity.status(HttpStatus.OK)
+            .body(funcionario);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();      
+        
+    }
+
     
 }
