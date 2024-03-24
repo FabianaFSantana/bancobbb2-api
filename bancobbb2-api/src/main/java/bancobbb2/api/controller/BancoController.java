@@ -37,6 +37,34 @@ public class BancoController {
                 .body(bancoRepository.save(banco));
     }
 
+    //Para adicionar funcionário em uma lista do banco:
+    @PostMapping("/{idBanco}/adicionarFuncionario/{idFuncionario}")
+    public ResponseEntity<Banco> adicionarFuncionarioNaLista(@PathVariable("idBanco") Long idBanco,
+    @PathVariable("idFuncionario") Long idFuncionario) {
+        Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
+
+        if (bancOptional.isPresent()) {
+            Banco bancoEncontrado = bancOptional.get();
+
+           Optional<Funcionario> funcOptional = funcionarioRepository.findById(idFuncionario);
+
+           if (funcOptional.isPresent()) {
+            Funcionario funcEncontrado = funcOptional.get();
+
+            List<Funcionario> funcionarios = bancoEncontrado.getFuncionarios();
+            funcionarios.add(funcEncontrado);
+
+            bancoRepository.save(bancoEncontrado);
+            return ResponseEntity.ok(bancoEncontrado);
+
+           } else {
+            return ResponseEntity.notFound().build();
+           }
+            
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     
     // Para Localizar o banco pelo id
     @GetMapping("/{id}")
@@ -79,6 +107,34 @@ public class BancoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
         .body("Banco excluído com sucesso!");
 
+    }
+
+    //Método para remover funcionário da lista do Banco:
+    @DeleteMapping("/{idBanco}/removerFuncionario/{idFuncionario}") 
+    public ResponseEntity<String> removerUsuarioDaLista(@PathVariable("idBanco") Long idBanco,
+    @PathVariable("idFuncionario") Long idFuncionario) {
+
+        Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
+        if (bancOptional.isPresent()) {
+            Banco bancoEncontrado = bancOptional.get();
+
+            Optional<Funcionario> funcOptional = funcionarioRepository.findById(idFuncionario);
+            if (funcOptional.isPresent()) {
+                Funcionario funcEncontrado = funcOptional.get();
+
+                List<Funcionario> funcionarios = bancoEncontrado.getFuncionarios();
+                funcionarios.remove(funcEncontrado);
+
+                bancoRepository.save(bancoEncontrado);
+                return ResponseEntity.status(HttpStatus.OK)
+                .body("Funcionário removido da lista do Banco.");
+                
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+            
+        }
+        return ResponseEntity.notFound().build();
     }
 
 
