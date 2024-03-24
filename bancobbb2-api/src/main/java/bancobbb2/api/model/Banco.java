@@ -33,5 +33,8 @@ public class Banco {
     @OneToMany
     private List<Funcionario> funcionarios;
 
+    @OneToMany
+    private List<Usuario> usuarios;
+
     
 }

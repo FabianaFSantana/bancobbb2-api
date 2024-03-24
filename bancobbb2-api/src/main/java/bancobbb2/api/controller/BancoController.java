@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.Banco;
 import bancobbb2.api.model.Funcionario;
+import bancobbb2.api.model.Usuario;
 import bancobbb2.api.repository.BancoRepository;
 import bancobbb2.api.repository.FuncionarioRepository;
+import bancobbb2.api.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping("/banco")
@@ -29,6 +31,9 @@ public class BancoController {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     // Para cadastrar o banco
     @PostMapping
@@ -41,13 +46,12 @@ public class BancoController {
     @PostMapping("/{idBanco}/adicionarFuncionario/{idFuncionario}")
     public ResponseEntity<Banco> adicionarFuncionarioNaLista(@PathVariable("idBanco") Long idBanco,
     @PathVariable("idFuncionario") Long idFuncionario) {
+        
         Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
-
         if (bancOptional.isPresent()) {
             Banco bancoEncontrado = bancOptional.get();
 
            Optional<Funcionario> funcOptional = funcionarioRepository.findById(idFuncionario);
-
            if (funcOptional.isPresent()) {
             Funcionario funcEncontrado = funcOptional.get();
 
@@ -60,6 +64,33 @@ public class BancoController {
            } else {
             return ResponseEntity.notFound().build();
            }
+            
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    //Método para adicionar Usuario a lista de usuarios do banco:
+    @PostMapping("/{idBanco}/adicionarUsuario/{idUsuario}")
+    public ResponseEntity<Banco> adicionarUsuarioNaLista(@PathVariable("idBanco") Long idBanco,
+    @PathVariable("idUsuario") Long idUsuario) {
+
+        Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
+        if (bancOptional.isPresent()) {
+            Banco bancoEncontrado = bancOptional.get();
+
+            Optional<Usuario> usuarOptional = usuarioRepository.findById(idUsuario);
+            if (usuarOptional.isPresent()) {
+                Usuario usuarioEncont = usuarOptional.get();
+
+                List<Usuario> usuarios = bancoEncontrado.getUsuarios();
+                usuarios.add(usuarioEncont);
+
+                bancoRepository.save(bancoEncontrado);
+                return ResponseEntity.ok(bancoEncontrado);
+                
+            } else {
+                return ResponseEntity.notFound().build();
+            }
             
         }
         return ResponseEntity.notFound().build();
@@ -111,7 +142,7 @@ public class BancoController {
 
     //Método para remover funcionário da lista do Banco:
     @DeleteMapping("/{idBanco}/removerFuncionario/{idFuncionario}") 
-    public ResponseEntity<String> removerUsuarioDaLista(@PathVariable("idBanco") Long idBanco,
+    public ResponseEntity<String> removerFuncionarioDaLista(@PathVariable("idBanco") Long idBanco,
     @PathVariable("idFuncionario") Long idFuncionario) {
 
         Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
@@ -133,6 +164,33 @@ public class BancoController {
                 return ResponseEntity.notFound().build();
             }
             
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    //Método para remover usuário da lista de usuarios:
+    @DeleteMapping("{idBanco}/removerUsuario/{idUsuario}")
+    public ResponseEntity<String> removerUsuarioDaLista(@PathVariable("idBanco") Long idBanco,
+    @PathVariable("idUsuario") Long idUsuario) {
+        
+        Optional<Banco> bancOptional = bancoRepository.findById(idBanco);
+        if (bancOptional.isPresent()) {
+            Banco bancoEncont = bancOptional.get();
+
+            Optional<Usuario> usuOptional = usuarioRepository.findById(idUsuario);
+            if (usuOptional.isPresent()) {
+                Usuario usuarEncontrado = usuOptional.get();
+
+                List<Usuario> usuarios = bancoEncont.getUsuarios();
+                usuarios.remove(usuarEncontrado);
+
+                bancoRepository.save(bancoEncont);
+                return ResponseEntity.status(HttpStatus.OK)
+                .body("Usuário removido com sucesso!");
+                
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
         return ResponseEntity.notFound().build();
     }
