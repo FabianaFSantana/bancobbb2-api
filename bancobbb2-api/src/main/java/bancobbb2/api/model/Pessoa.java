@@ -21,6 +21,7 @@ public class Pessoa {
     private String sobrenome;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
+    @Column(nullable = false)
     private LocalDate dataDeNascimento;
 
     @Column(nullable = false, unique = true)
