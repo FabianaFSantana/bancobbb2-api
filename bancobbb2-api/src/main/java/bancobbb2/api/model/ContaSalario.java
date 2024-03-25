@@ -24,7 +24,7 @@ public class ContaSalario {
     private int numeroCs;
 
     @Column(nullable = false)
-    private String senhaCS;
+    private String senhaCs;
 
     @Column(nullable = false)
     private double saldoCs;
