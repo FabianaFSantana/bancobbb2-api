@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.Usuario;
 import bancobbb2.api.repository.UsuarioRepository;
+import bancobbb2.api.service.ContaCorrenteService;
+import bancobbb2.api.service.ContaPoupancaService;
+import bancobbb2.api.service.ContaSalarioService;
 
 @RestController
 @RequestMapping("/usuario")
@@ -25,11 +28,66 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ContaCorrenteService contaCorrenteService;
+
+    @Autowired
+    private ContaPoupancaService contaPoupancaService;
+
+    @Autowired
+    private ContaSalarioService contaSalarioService;
+
+
     @PostMapping
     public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(usuarioRepository.save(usuario));
     }
+
+    @PostMapping("/{idUsuario}/associarUsuarioContaCorrente/{idCc}")
+    public ResponseEntity<String> associarUsuarioContaCorrente(@PathVariable("idUsuario") Long idUsuario,
+    @PathVariable("idCc") Long idCc) {
+
+        try { //usado para envolver um bloco de código onde excessões podem ocorrer
+            contaCorrenteService.associarContaCorrenteUsuario(idUsuario, idCc);
+            return ResponseEntity.ok("Usuário associado à conta corrente!");
+        } catch (Exception e) { //Para tratar a excessão
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Erro ao associar usuário à conta" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/{idUsuario}/associarUsuarioContaPoupanca/{idCp}")
+    public ResponseEntity<String> associarUsuarioPoupanca(@PathVariable("idUsuario") Long idUsuario,
+    @PathVariable("idCp") Long idCp) {
+
+        try {
+            contaPoupancaService.associarContaPoupancaUsuario(idUsuario, idCp);
+            return ResponseEntity.status(HttpStatus.OK)
+            .body("Usuário associado com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Erro ao associar usuário à conta!" + e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/{idUsuario}/associarUsuarioContaSalario/{idCs}")
+    public ResponseEntity<String> associarContaSalarioUsuario(@PathVariable("idUsuario") Long idUsuario,
+    @PathVariable("idCs") Long idCs) {
+
+        try {
+            contaSalarioService.associarContaSalarioUsuario(idUsuario, idCs);
+            return ResponseEntity.status(HttpStatus.OK)
+            .body("Usuário associado à conta com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Erro ao associar usuário à conta!" + e.getMessage());
+        }
+    }
+
+
+   
 
      @GetMapping
     public ResponseEntity<List<Usuario>> exibirListaDeUsuarios() {
@@ -87,7 +145,6 @@ public class UsuarioController {
             usuarioEncontrado.getEnderecoUsuario().setDdd(usuario.getEnderecoUsuario().getDdd());
             usuarioEncontrado.getEnderecoUsuario().setTelefone(usuario.getEnderecoUsuario().getTelefone());
             usuarioEncontrado.getEnderecoUsuario().setCelular(usuario.getEnderecoUsuario().getCelular());
-            usuarioEncontrado.setTipoDeConta(usuario.getTipoDeConta());
             
             return ResponseEntity.status(HttpStatus.OK)
             .body(usuarioRepository.save(usuarioEncontrado));

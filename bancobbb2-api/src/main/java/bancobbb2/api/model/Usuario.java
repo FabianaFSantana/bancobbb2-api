@@ -1,14 +1,11 @@
 package bancobbb2.api.model;
 
-import bancobbb2.api.constant.TipoDeConta;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +27,13 @@ public class Usuario {
     @Embedded
     private Endereco enderecoUsuario;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TipoDeConta tipoDeConta;
+    @OneToOne
+    private ContaCorrente contaCorrente;
+
+    @OneToOne
+    private ContaPoupanca contaPoupanca;
+
+    @OneToOne
+    private ContaSalario contaSalario;
 
 }
