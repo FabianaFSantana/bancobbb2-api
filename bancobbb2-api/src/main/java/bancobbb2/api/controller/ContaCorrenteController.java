@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.ContaCorrente;
 import bancobbb2.api.repository.ContaCorrenteRepository;
+import bancobbb2.api.service.ContaCorrenteService;
 
 @RestController
 @RequestMapping("/contaCorrente")
@@ -24,6 +25,9 @@ public class ContaCorrenteController {
 
     @Autowired
     private ContaCorrenteRepository contaCorrenteRepository;
+
+    @Autowired
+    private ContaCorrenteService contaCorrenteService;
 
     @PostMapping
     public ResponseEntity<ContaCorrente> cadastrarContaCorrente(@RequestBody ContaCorrente contaCorrente) {
@@ -41,6 +45,12 @@ public class ContaCorrenteController {
     public ResponseEntity<Optional<ContaCorrente>> buscarContaCorrentePeloId(@PathVariable("idCc") Long idCc) {
         return ResponseEntity.status(HttpStatus.OK)
         .body(contaCorrenteRepository.findById(idCc));
+    }
+
+    @GetMapping("/saldo/{idCc}")
+    public ResponseEntity<Double> exibirSalcoCc(@PathVariable("idCc") Long idCc) {
+        Double saldo = contaCorrenteService.exibirSaldo(idCc);
+        return ResponseEntity.ok(saldo);
     }
 
     @PutMapping("/{idCc}")
