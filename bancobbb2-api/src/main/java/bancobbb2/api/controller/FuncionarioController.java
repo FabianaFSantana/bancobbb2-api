@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.repository.FuncionarioRepository;
+import bancobbb2.api.service.ContaCorrenteService;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -24,6 +25,9 @@ public class FuncionarioController {
 
     @Autowired
     private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private ContaCorrenteService contaCorrenteService;
     
     //Para cadastrar um funcionario
     @PostMapping
@@ -31,6 +35,20 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(funcionarioRepository.save(funcionario));
 
+    }
+
+    //Associar funcionario a conta corrente
+    @PostMapping("/{idFuncionario}/associarFuncContaCorr/{idCc}")
+    public ResponseEntity<String> associarFuncionarioContaCorrente(@PathVariable("idFuncionario") Long idFuncionario,
+    @PathVariable("idCc") Long idCc) {
+        try {
+            contaCorrenteService.associarContaCorrenteFuncionario(idFuncionario, idCc);
+            return ResponseEntity.status(HttpStatus.OK)
+            .body("Funcionário associado a conta corrente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Erro na associação do funcionário à conta corrente." + e.getMessage());
+        }
     }
 
     //Para Acessar uma lista de funcionarios
