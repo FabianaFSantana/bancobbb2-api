@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.DepositoDto;
 import bancobbb2.api.model.ContaCorrente;
 import bancobbb2.api.repository.ContaCorrenteRepository;
 import bancobbb2.api.service.ContaCorrenteService;
@@ -33,6 +34,15 @@ public class ContaCorrenteController {
     public ResponseEntity<ContaCorrente> cadastrarContaCorrente(@RequestBody ContaCorrente contaCorrente) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(contaCorrenteRepository.save(contaCorrente));
+    }
+
+    @PostMapping("/depositarValor/{idCc}")
+    public ResponseEntity<String> depositarValorContaCorrente(@PathVariable("idCc") Long idCc,
+    @RequestBody DepositoDto valorDto) {
+       
+        contaCorrenteService.depositarValorCc(idCc, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Valor depositado com sucesso!");
     }
 
     @GetMapping

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bancobbb2.api.dto.DepositoDto;
 import bancobbb2.api.model.ContaCorrente;
 import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.model.Usuario;
@@ -74,6 +75,27 @@ public class ContaCorrenteService {
             
         } else {
             throw new EntityNotFoundException("Conta corrente não encontrada!");
+        }
+    }
+
+    public void depositarValorCc(Long idCc, DepositoDto valorDto) {
+        Optional<ContaCorrente> contaOptional = contaCorrenteRepository.findById(idCc);
+
+        if (contaOptional.isPresent()) {
+            ContaCorrente contaCorrente = contaOptional.get();
+            Double novoLimiteChequeEsp = contaCorrente.getLimiteChequeEspecial() + valorDto.getValorDeposito();
+            Double novoSaldo = contaCorrente.getSaldoCc();
+
+            if (novoLimiteChequeEsp > contaCorrente.getLimiteChequeEspecial()) {
+                Double excedente = novoLimiteChequeEsp - contaCorrente.getLimiteChequeEspecial();
+                novoLimiteChequeEsp -= excedente;
+                novoSaldo += excedente;
+                
+            } 
+            
+            contaCorrente.setSaldoCc(novoSaldo);
+            contaCorrente.setLimiteChequeEspecial(novoLimiteChequeEsp);
+            contaCorrenteRepository.save(contaCorrente);
         }
     }
 
