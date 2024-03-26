@@ -19,6 +19,7 @@ import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.repository.FuncionarioRepository;
 import bancobbb2.api.service.ContaCorrenteService;
 import bancobbb2.api.service.ContaPoupancaService;
+import bancobbb2.api.service.ContaSalarioService;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -32,6 +33,9 @@ public class FuncionarioController {
 
     @Autowired
     private ContaPoupancaService contaPoupancaService;
+
+    @Autowired
+    private ContaSalarioService contaSalarioService;
     
     //Para cadastrar um funcionario
     @PostMapping
@@ -66,6 +70,20 @@ public class FuncionarioController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body("Erro ao associar Funcionário à conta poupança." + e.getMessage());
+        }
+    }
+
+    //Associar funcionario a conta salario
+    @PostMapping("/{idFuncionario}/associarFuncContaSalario/{idCs}")
+    public ResponseEntity<String> associarFuncContaSalario(@PathVariable("idFuncionario") Long idFuncionario,
+    @PathVariable("idCs") Long idCs) {
+        try {
+            contaSalarioService.associarContaSalarioFuncionario(idFuncionario, idCs);
+            return ResponseEntity.status(HttpStatus.OK)
+            .body("Funcionário associado a conta salário com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Erro ao associar o usuário." +e.getMessage());
         }
     }
 
