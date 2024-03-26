@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bancobbb2.api.model.ContaPoupanca;
+import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.model.Usuario;
 import bancobbb2.api.repository.ContaPoupancaRepository;
+import bancobbb2.api.repository.FuncionarioRepository;
 import bancobbb2.api.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,7 +27,10 @@ public class ContaPoupancaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    //Método para associar Conta Pupança a Usuario
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
+
+    //Método para associar Conta Poupança a Usuario
     public void associarContaPoupancaUsuario(Long idUsuario, Long idCp) {
 
         Optional<Usuario> usuarOptional = usuarioRepository.findById(idUsuario);
@@ -43,6 +48,25 @@ public class ContaPoupancaService {
             throw new EntityNotFoundException("Usuario não encontrado!");
         }
     }
+
+    //Método para associar Conta Poupança à Funcionário
+    public void associarFuncContaPoupanca(Long idFuncionario, Long idCp) {
+        Optional<Funcionario> funcOptional = funcionarioRepository.findById(idFuncionario);
+        Optional<ContaPoupanca> contaOptional = contaPoupancaRepository.findById(idCp);
+
+        if (funcOptional.isPresent() && contaOptional.isPresent()) {
+            Funcionario funcionario = funcOptional.get();
+            ContaPoupanca contaPoupanca = contaOptional.get();
+
+            funcionario.setContaPoupanca(contaPoupanca);
+            funcionarioRepository.save(funcionario);
+        } else {
+            throw new EntityNotFoundException("Funcionário não foi encontrado.");
+        }
+    }
+    
+
+
 
     
     
