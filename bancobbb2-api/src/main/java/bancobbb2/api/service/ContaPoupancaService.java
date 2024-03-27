@@ -1,5 +1,6 @@
 package bancobbb2.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,19 @@ public class ContaPoupancaService {
             
         } else {
             return null;
+        }
+    }
+
+    public void calcularResndimento() {
+        List<ContaPoupanca> contaspoupanca = contaPoupancaRepository.findAll();
+
+        for (ContaPoupanca conta : contaspoupanca) {
+            Double saldo = conta.getSaldoCp();
+            Double rendimento = saldo * 0.3;
+            Double novoSaldo = saldo + rendimento;
+            conta.setSaldoCp(novoSaldo);
+            contaPoupancaRepository.save(conta);
+            
         }
     }
     

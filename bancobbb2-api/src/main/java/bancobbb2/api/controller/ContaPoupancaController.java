@@ -46,6 +46,13 @@ public class ContaPoupancaController {
         .body(saldo);
     }
 
+    @PostMapping("/calcularRendimento")
+    public ResponseEntity<String> calularRendimento() {
+        contaPoupancaService.calcularResndimento();
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Rendimentos adicionados aos saldos.");
+    }
+
     @GetMapping
     public ResponseEntity<List<ContaPoupanca>> exibirListaDeContasPoupanca() {
         return ResponseEntity.status(HttpStatus.OK)
@@ -63,6 +70,7 @@ public class ContaPoupancaController {
         Double saldo = contaPoupancaService.exibirSaldoCp(idCp);
         return ResponseEntity.ok(saldo);
     }
+
 
     @PutMapping("/{idCp}")
     public ResponseEntity<ContaPoupanca> atualizarDadosDaConta(@PathVariable("idCp") Long idCp,
