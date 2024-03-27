@@ -65,5 +65,17 @@ public class ContaSalarioService {
             throw new EntityNotFoundException("Usuário não encontrado!");
         }
     }
+
+    public Double exbirSaldo(Long idCs) {
+        Optional<ContaSalario> contaOptional = contaSalarioRepository.findById(idCs);
+
+        if (contaOptional.isPresent()) {
+            ContaSalario conta = contaOptional.get();
+           return conta.getSaldoCs();
+        } else {
+            throw new  EntityNotFoundException("Conta não encontrada!");
+        }
+    
+    }
     
 }

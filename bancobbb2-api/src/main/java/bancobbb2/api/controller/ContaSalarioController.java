@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.ContaSalario;
 import bancobbb2.api.repository.ContaSalarioRepository;
+import bancobbb2.api.service.ContaSalarioService;
 
 @RestController
 @RequestMapping("/contaSalario")
@@ -25,11 +26,15 @@ public class ContaSalarioController {
     @Autowired
     private ContaSalarioRepository contaSalarioRepository;
 
+    @Autowired
+    private ContaSalarioService contaSalarioService;
+
     @PostMapping
     public ResponseEntity<ContaSalario> criarContaSalario(@RequestBody ContaSalario contaSalario) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(contaSalarioRepository.save(contaSalario));
     }
+
 
     @GetMapping
     public ResponseEntity<List<ContaSalario>> exibirListaDeContas() {
@@ -41,6 +46,13 @@ public class ContaSalarioController {
     public ResponseEntity<Optional<ContaSalario>> buscarContaPeloId(@PathVariable("idCs") Long idCs) {
         return ResponseEntity.status(HttpStatus.OK)
         .body(contaSalarioRepository.findById(idCs));
+    }
+
+    @GetMapping("/exibirSaldo/{idCs}")
+    public ResponseEntity<Double> exibirSaldoContaSalario(@PathVariable("idCs") Long idCs) {
+        Double saldo = contaSalarioService.exbirSaldo(idCs);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(saldo);
     }
 
     @PutMapping("/{idCs}")
