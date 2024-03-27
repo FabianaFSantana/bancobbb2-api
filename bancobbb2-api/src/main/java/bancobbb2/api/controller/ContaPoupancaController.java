@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.DepositoDto;
 import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaPoupanca;
 import bancobbb2.api.repository.ContaPoupancaRepository;
@@ -51,6 +52,15 @@ public class ContaPoupancaController {
         contaPoupancaService.calcularResndimento();
         return ResponseEntity.status(HttpStatus.OK)
         .body("Rendimentos adicionados aos saldos.");
+    }
+
+    @PostMapping("/depositarValor/{idCp}")
+    public ResponseEntity<String> depositarValorContaPoupanca(@PathVariable("idCp") Long idCp,
+    @RequestBody DepositoDto valorDto) {
+
+        contaPoupancaService.depositarValor(idCp, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Valor depositado com sucesso!");
     }
 
     @GetMapping

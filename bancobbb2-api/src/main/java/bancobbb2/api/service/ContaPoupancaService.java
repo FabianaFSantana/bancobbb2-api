@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bancobbb2.api.dto.DepositoDto;
 import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaPoupanca;
 import bancobbb2.api.model.Funcionario;
@@ -103,6 +104,19 @@ public class ContaPoupancaService {
             Double novoSaldo = saldo + rendimento;
             conta.setSaldoCp(novoSaldo);
             contaPoupancaRepository.save(conta);
+            
+        }
+    }
+
+    public void depositarValor(Long idCp, DepositoDto valorDto) {
+        Optional<ContaPoupanca> contaOptional = contaPoupancaRepository.findById(idCp);
+
+        if (contaOptional.isPresent()) {
+            ContaPoupanca contaPoupanca = contaOptional.get();
+
+            Double novoSaldo = contaPoupanca.getSaldoCp() + valorDto.getValorDeposito();
+            contaPoupanca.setSaldoCp(novoSaldo);
+            contaPoupancaRepository.save(contaPoupanca);
             
         }
     }
