@@ -76,6 +76,22 @@ public class ContaPoupancaService {
             throw new EntityNotFoundException("Conta não encontrada.");
         }
     }
+
+    public Double sacarValorCp(Long idCp, SaqueDto valorDto) {
+        Optional<ContaPoupanca> contaOptional = contaPoupancaRepository.findById(idCp);
+
+        if (contaOptional.isPresent()) {
+            ContaPoupanca contaPoupanca = contaOptional.get();
+
+            Double novoSaldo = contaPoupanca.getSaldoCp() - valorDto.getValorSaque();
+            contaPoupanca.setSaldoCp(novoSaldo);
+            contaPoupancaRepository.save(contaPoupanca);
+            return novoSaldo;
+            
+        } else {
+            return null;
+        }
+    }
     
 
 

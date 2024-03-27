@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaPoupanca;
 import bancobbb2.api.repository.ContaPoupancaRepository;
 import bancobbb2.api.service.ContaPoupancaService;
@@ -33,6 +35,15 @@ public class ContaPoupancaController {
     public ResponseEntity<ContaPoupanca> cadastrarContaPoupanca(@RequestBody ContaPoupanca contaPoupanca) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(contaPoupancaRepository.save(contaPoupanca));
+    }
+
+    @PostMapping("/sacarValor/{idCp}")
+    public ResponseEntity<Double> sacarValorCp(@PathVariable("idCp") Long idCp, 
+    @RequestBody SaqueDto valorDto) {
+
+        Double saldo = contaPoupancaService.sacarValorCp(idCp, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(saldo);
     }
 
     @GetMapping
