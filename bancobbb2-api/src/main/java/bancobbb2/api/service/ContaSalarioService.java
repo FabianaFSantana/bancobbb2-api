@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bancobbb2.api.dto.DepositoDto;
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaSalario;
 import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.model.Usuario;
@@ -76,6 +78,35 @@ public class ContaSalarioService {
             throw new  EntityNotFoundException("Conta não encontrada!");
         }
     
+    }
+
+    public Double sacarValor(Long idCs, SaqueDto valorDto) {
+        Optional<ContaSalario> contaOptional = contaSalarioRepository.findById(idCs);
+
+        if (contaOptional.isPresent()) {
+            ContaSalario contaSalario = contaOptional.get();
+
+            Double novoSaldo = contaSalario.getSaldoCs() - valorDto.getValorSaque();
+            contaSalario.setSaldoCs(novoSaldo);
+            contaSalarioRepository.save(contaSalario);
+            return novoSaldo;
+            
+        } else {
+            throw new EntityNotFoundException("Conta não encontrada.");
+        }
+    }
+
+    public void depositarValorCs(Long idCs, DepositoDto valorDto) {
+        Optional<ContaSalario> contaOptional = contaSalarioRepository.findById(idCs);
+
+        if (contaOptional.isPresent()) {
+            ContaSalario contaSalario = contaOptional.get();
+
+            Double novoSaldo = contaSalario.getSaldoCs() + valorDto.getValorDeposito();
+            contaSalario.setSaldoCs(novoSaldo);
+            contaSalarioRepository.save(contaSalario);
+            
+        }
     }
     
 }

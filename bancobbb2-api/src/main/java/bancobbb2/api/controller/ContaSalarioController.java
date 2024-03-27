@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.DepositoDto;
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaSalario;
 import bancobbb2.api.repository.ContaSalarioRepository;
 import bancobbb2.api.service.ContaSalarioService;
@@ -35,6 +37,23 @@ public class ContaSalarioController {
         .body(contaSalarioRepository.save(contaSalario));
     }
 
+    @PostMapping("/sacarValor/{idCs}")
+    public ResponseEntity<Double> sacarValorContaSalario(@PathVariable("idCs") Long idCs,
+    @RequestBody SaqueDto valorDto) {
+
+        Double novoSaldo = contaSalarioService.sacarValor(idCs, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(novoSaldo);
+    }
+    
+    @PostMapping("/depositarValor/{idCs}")
+    public ResponseEntity<String> depositarValorContaSalario(@PathVariable("idCs") Long idCs,
+    @RequestBody DepositoDto valorDto) {
+
+        contaSalarioService.depositarValorCs(idCs, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Valor depositado com sucesso.");
+    }
 
     @GetMapping
     public ResponseEntity<List<ContaSalario>> exibirListaDeContas() {
