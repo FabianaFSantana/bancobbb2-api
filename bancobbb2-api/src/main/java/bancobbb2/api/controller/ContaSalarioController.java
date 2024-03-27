@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.DepositoDto;
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaSalario;
 import bancobbb2.api.repository.ContaSalarioRepository;
+import bancobbb2.api.service.ContaSalarioService;
 
 @RestController
 @RequestMapping("/contaSalario")
@@ -25,10 +28,31 @@ public class ContaSalarioController {
     @Autowired
     private ContaSalarioRepository contaSalarioRepository;
 
+    @Autowired
+    private ContaSalarioService contaSalarioService;
+
     @PostMapping
     public ResponseEntity<ContaSalario> criarContaSalario(@RequestBody ContaSalario contaSalario) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(contaSalarioRepository.save(contaSalario));
+    }
+
+    @PostMapping("/sacarValor/{idCs}")
+    public ResponseEntity<Double> sacarValorContaSalario(@PathVariable("idCs") Long idCs,
+    @RequestBody SaqueDto valorDto) {
+
+        Double novoSaldo = contaSalarioService.sacarValor(idCs, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(novoSaldo);
+    }
+    
+    @PostMapping("/depositarValor/{idCs}")
+    public ResponseEntity<String> depositarValorContaSalario(@PathVariable("idCs") Long idCs,
+    @RequestBody DepositoDto valorDto) {
+
+        contaSalarioService.depositarValorCs(idCs, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Valor depositado com sucesso.");
     }
 
     @GetMapping
@@ -41,6 +65,13 @@ public class ContaSalarioController {
     public ResponseEntity<Optional<ContaSalario>> buscarContaPeloId(@PathVariable("idCs") Long idCs) {
         return ResponseEntity.status(HttpStatus.OK)
         .body(contaSalarioRepository.findById(idCs));
+    }
+
+    @GetMapping("/exibirSaldo/{idCs}")
+    public ResponseEntity<Double> exibirSaldoContaSalario(@PathVariable("idCs") Long idCs) {
+        Double saldo = contaSalarioService.exbirSaldo(idCs);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(saldo);
     }
 
     @PutMapping("/{idCs}")
