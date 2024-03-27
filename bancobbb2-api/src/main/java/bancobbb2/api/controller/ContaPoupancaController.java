@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bancobbb2.api.model.ContaPoupanca;
 import bancobbb2.api.repository.ContaPoupancaRepository;
+import bancobbb2.api.service.ContaPoupancaService;
 
 @RestController
 @RequestMapping("/contaPoupanca")
@@ -24,6 +25,8 @@ public class ContaPoupancaController {
 
     @Autowired
     private ContaPoupancaRepository contaPoupancaRepository;
+
+    @Autowired ContaPoupancaService contaPoupancaService;
 
 
     @PostMapping
@@ -42,6 +45,12 @@ public class ContaPoupancaController {
     public ResponseEntity<Optional<ContaPoupanca>> buscarContaPoupancaPeloId(@PathVariable("idCp") Long idCp) {
         return ResponseEntity.status(HttpStatus.OK)
         .body(contaPoupancaRepository.findById(idCp));
+    }
+
+    @GetMapping("/exibirSaldo/{idCp}")
+    public ResponseEntity<Double> exibirSaldoCp(@PathVariable("idCp") Long idCp) {
+        Double saldo = contaPoupancaService.exibirSaldoCp(idCp);
+        return ResponseEntity.ok(saldo);
     }
 
     @PutMapping("/{idCp}")

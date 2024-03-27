@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaPoupanca;
 import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.model.Usuario;
@@ -62,6 +63,17 @@ public class ContaPoupancaService {
             funcionarioRepository.save(funcionario);
         } else {
             throw new EntityNotFoundException("Funcionário não foi encontrado.");
+        }
+    }
+
+    public Double exibirSaldoCp(Long idCp) {
+        Optional<ContaPoupanca> contaOptional = contaPoupancaRepository.findById(idCp);
+
+        if (contaOptional.isPresent()) {
+            ContaPoupanca conta = contaOptional.get();
+            return conta.getSaldoCp();
+        } else {
+            throw new EntityNotFoundException("Conta não encontrada.");
         }
     }
     
