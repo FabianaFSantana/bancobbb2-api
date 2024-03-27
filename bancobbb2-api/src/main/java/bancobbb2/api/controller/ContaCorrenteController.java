@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import bancobbb2.api.dto.DepositoDto;
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaCorrente;
 import bancobbb2.api.repository.ContaCorrenteRepository;
+import bancobbb2.api.service.ContaCorrenteService;
 
 @RestController
 @RequestMapping("/contaCorrente")
@@ -25,10 +28,32 @@ public class ContaCorrenteController {
     @Autowired
     private ContaCorrenteRepository contaCorrenteRepository;
 
+    @Autowired
+    private ContaCorrenteService contaCorrenteService;
+
     @PostMapping
     public ResponseEntity<ContaCorrente> cadastrarContaCorrente(@RequestBody ContaCorrente contaCorrente) {
         return ResponseEntity.status(HttpStatus.CREATED)
         .body(contaCorrenteRepository.save(contaCorrente));
+    }
+
+    @PostMapping("/depositarValor/{idCc}")
+    public ResponseEntity<String> depositarValorContaCorrente(@PathVariable("idCc") Long idCc,
+    @RequestBody DepositoDto valorDto) {
+       
+        contaCorrenteService.depositarValorCc(idCc, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body("Valor depositado com sucesso!");
+    }
+
+    @PostMapping("/sacarValor/{idCc}")
+    public ResponseEntity<Double> sacarValorContaCorrente(@PathVariable("idCc") Long idCc,
+    @RequestBody SaqueDto valorDto) {
+
+        Double novoSaldo = contaCorrenteService.sacarValorCc(idCc, valorDto);
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(novoSaldo);
+
     }
 
     @GetMapping
@@ -41,6 +66,12 @@ public class ContaCorrenteController {
     public ResponseEntity<Optional<ContaCorrente>> buscarContaCorrentePeloId(@PathVariable("idCc") Long idCc) {
         return ResponseEntity.status(HttpStatus.OK)
         .body(contaCorrenteRepository.findById(idCc));
+    }
+
+    @GetMapping("/saldo/{idCc}")
+    public ResponseEntity<Double> exibirSalcoCc(@PathVariable("idCc") Long idCc) {
+        Double saldo = contaCorrenteService.exibirSaldo(idCc);
+        return ResponseEntity.ok(saldo);
     }
 
     @PutMapping("/{idCc}")

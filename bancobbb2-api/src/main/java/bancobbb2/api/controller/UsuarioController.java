@@ -87,7 +87,6 @@ public class UsuarioController {
     }
 
 
-   
 
      @GetMapping
     public ResponseEntity<List<Usuario>> exibirListaDeUsuarios() {
@@ -122,6 +121,8 @@ public class UsuarioController {
             return null;
         }
     }
+
+   
 
      @PutMapping("/{idUsuario}")
     public ResponseEntity<Usuario> atualizarDadosDoUsuario(@PathVariable("idUsuario") Long idUsuario,
