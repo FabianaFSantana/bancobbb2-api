@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import bancobbb2.api.dto.DepositoDto;
+import bancobbb2.api.dto.SaqueDto;
 import bancobbb2.api.model.ContaCorrente;
 import bancobbb2.api.model.Funcionario;
 import bancobbb2.api.model.Usuario;
@@ -86,8 +87,8 @@ public class ContaCorrenteService {
             Double novoLimiteChequeEsp = contaCorrente.getLimiteChequeEspecial() + valorDto.getValorDeposito();
             Double novoSaldo = contaCorrente.getSaldoCc();
 
-            if (novoLimiteChequeEsp > contaCorrente.getLimiteChequeEspecial()) {
-                Double excedente = novoLimiteChequeEsp - contaCorrente.getLimiteChequeEspecial();
+            if (novoLimiteChequeEsp > 1000) {
+                Double excedente = novoLimiteChequeEsp - 1000;
                 novoLimiteChequeEsp -= excedente;
                 novoSaldo += excedente;
                 
@@ -99,4 +100,35 @@ public class ContaCorrenteService {
         }
     }
 
+    public Double sacarValorCc(Long idCc, SaqueDto valorDto) {
+        Optional<ContaCorrente> contaOptional = contaCorrenteRepository.findById(idCc);
+
+        if (contaOptional.isPresent()) {
+            ContaCorrente conta =contaOptional.get();
+
+            if (valorDto.getValorSaque() <= conta.getSaldoCc()) {
+                Double novoSaldo = conta.getSaldoCc() - valorDto.getValorSaque();
+                conta.setSaldoCc(novoSaldo);
+                contaCorrenteRepository.save(conta);
+                return novoSaldo;
+
+            } else if(valorDto.getValorSaque() > conta.getSaldoCc() && valorDto.getValorSaque() <= conta.getSaldoCc() + conta.getLimiteChequeEspecial()) {
+                Double novoSaldo = (conta.getSaldoCc() + conta.getLimiteChequeEspecial()) - valorDto.getValorSaque();
+                conta.setSaldoCc(0.0);
+                conta.setLimiteChequeEspecial(novoSaldo);
+                contaCorrenteRepository.save(conta);
+                return novoSaldo;
+
+            } else {
+                return null;
+            }
+
+        }
+        return null;
+            
+    }
 }
+
+  
+
+

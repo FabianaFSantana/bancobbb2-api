@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Service
 public class SaqueDto {
 
-    private Double valorSaqueCc;
+    private Double valorSaque;
     
 }
