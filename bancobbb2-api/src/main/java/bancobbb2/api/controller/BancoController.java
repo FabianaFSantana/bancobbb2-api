@@ -96,6 +96,12 @@ public class BancoController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping
+    public ResponseEntity<List<Banco>> exibirListaDeBancos() {
+        return ResponseEntity.status(HttpStatus.OK)
+        .body(bancoRepository.findAll());
+    }
+
     
     // Para Localizar o banco pelo id
     @GetMapping("/{id}")
