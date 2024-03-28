@@ -108,7 +108,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("cpf/{cpf}")
+    @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Usuario> buscarUsuarioPeloCpf(@PathVariable("cpf") String cpf) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByPessoaUsuarioCpf(cpf);
         
