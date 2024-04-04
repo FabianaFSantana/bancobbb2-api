@@ -1,4 +1,5 @@
 # bancobbb2-api
+Api Rest para simulção de um sistema bancário.
 <div align="center">
   
 ![BancoBBB](https://github.com/FabianaFSantana/bancobbb2-api/assets/161942930/a1122719-54b8-4b6a-951f-d146a2db463b)
