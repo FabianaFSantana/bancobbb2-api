@@ -6,7 +6,7 @@
 </div>
 
 ## Descrição do Projeto
-O Taskify é uma API REST desenvolvida com Spring Boot para servir como backend de uma aplicação de gerenciamento de tarefas. Ele oferece recursos para manipulação de usuários, tarefas e projetos, proporcionando uma interface para interação com o banco de dados MySQL.
+O Bancobbb é uma API REST desenvolvida com Spring Boot para servir como backend de uma aplicação de simulação de um sistema bancário. Ele oferece recursos para manipulação de usuários, funcionários, contas correntes, contas poupanças e contas salários, proporcionando uma interface para interação com o banco de dados MySQL.
 
 ## Configuração do Ambiente
 
